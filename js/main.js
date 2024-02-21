@@ -74,12 +74,15 @@ function hienThiDanhSachNhanVien(data) {
         content += `
             <tr>
                 <td>${nv.taiKhoan}</td>
-                <td>${nv.tenKH}</td>
+                <td>${nv.tenNV}</td>
                 <td>${nv.email}</td>
                 <td>${nv.ngayLam}</td>
                 <td>${nv.chucVu}</td>
                 <td>${nv.tongLuong}</td>
                 <td>${nv.loaiNhanVien}</td>
+                <td><button class="btn btn-info" onclick= "" data-toggle="modal"
+                                        data-target="#myModal"> Update </button>
+                </td>
                 <td><button class="btn btn-danger" onclick= "deleteNV(${nv.taiKhoan})"> Delete </button>
                 </td>
             </tr>
@@ -128,3 +131,16 @@ function deleteNV(id) {
     hienThiDanhSachNhanVien(dsnv.arr);
     setLocalStorage();
 }
+
+/**
+ * Tìm kiếm nhân viên
+ * callback function: hàm có tham số, tham số là 1 hàm khác
+ */
+
+getEle("searchName").addEventListener("keyup", function () {
+    //Lấy từ khóa tìm kiếm
+    const keyword = getEle("searchName").value;
+    console.log(keyword);
+    const mangTimKiem = dsnv.timKiemNV(keyword);
+    hienThiDanhSachNhanVien(mangTimKiem);
+});

@@ -1,6 +1,6 @@
 function NhanVien(
     _taiKhoan,
-    _tenKH,
+    _tenNV,
     _email,
     _matKhau,
     _ngayLam,
@@ -9,7 +9,7 @@ function NhanVien(
     _gioLam
 ) {
     this.taiKhoan = _taiKhoan;
-    this.tenKH = _tenKH;
+    this.tenNV = _tenNV;
     this.email = _email;
     this.matKhau = _matKhau;
     this.ngayLam = _ngayLam;
