@@ -1,11 +1,13 @@
 const dsnv = new DSNV();
 
+getLocalStorage();
+
 function getEle(id) {
     return document.getElementById(id);
 }
 
 function layThongTinNhanVien() {
-    // Lấy thông tin từ form
+    // Lấy thông tin nhân viên
     const _taiKhoan = getEle("tknv").value;
     const _tenKH = getEle("name").value;
     const _email = getEle("email").value;
@@ -27,17 +29,40 @@ function layThongTinNhanVien() {
         _gioLam
     );
 
-    // Tính tổng lương
+    // Tính toán
     nv.tinhTongLuong();
+    nv.xepLoai();
 
-    // Loai nhân viên
-    nv.loaiNhanVien();
+    return nv;
 }
 
+/**
+ * Lưu mảng nhân viên xuống localStorge
+ */
 function setLocalStorage() {
     // Chuyển mảng sinh viên thành chuỗi
     const arrString = JSON.stringify(dsnv.arr);
     // Lưu xuống
+    localStorage.setItem("DSNV", arrString);
+}
+
+/**
+ * Lấy mảng sinh viên xuống localStorge
+ */
+function getLocalStorage() {
+    if (!localStorage.getItem("DSNV")) return;
+
+    //Lấy mảng nhân viên từ localStorage
+    const arrString = localStorage.getItem("DSNV");
+
+    //Chuyển mảng nhân viên từ chuỗi --> Json
+    const arrJSON = JSON.parse(arrString);
+
+    //Phục hồi data cho dsnv.arr
+    dsnv.arr = arrJSON;
+
+    // Hiển thị danh sách sinh viên
+    hienThiDanhSachNhanVien(dsnv.arr);
 }
 
 function hienThiDanhSachNhanVien(data) {
@@ -51,9 +76,12 @@ function hienThiDanhSachNhanVien(data) {
                 <td>${nv.taiKhoan}</td>
                 <td>${nv.tenKH}</td>
                 <td>${nv.email}</td>
+                <td>${nv.ngayLam}</td>
                 <td>${nv.chucVu}</td>
                 <td>${nv.tongLuong}</td>
                 <td>${nv.loaiNhanVien}</td>
+                <td><button class="btn btn-danger" onclick= "deleteNV(${nv.taiKhoan})"> Delete </button>
+                </td>
             </tr>
         `;
     }
@@ -61,12 +89,42 @@ function hienThiDanhSachNhanVien(data) {
     getEle("tableDanhSach").innerHTML = content;
 }
 
+/**
+ * Reset form
+ */
+
+function resetForm() {
+    getEle("tknv").value = "";
+    getEle("name").value = "";
+    getEle("email").value = "";
+    getEle("password").value = "";
+    getEle("datepicker").value = "";
+    getEle("luongCB").value = "";
+    getEle("chucvu").value = "";
+    getEle("gioLam").value = "";
+}
+
+/**
+ * Thêm nhân viên
+ */
+
 function themNV() {
     const nv = layThongTinNhanVien();
 
     //Thêm nhân viên vào mảng
     dsnv.themNV(nv);
-
     // Hiển thị danh sách sinh viên
     hienThiDanhSachNhanVien(dsnv.arr);
+    resetForm();
+    setLocalStorage();
+}
+
+/**
+ * Xóa nhân viên
+ */
+function deleteNV(id) {
+    dsnv.xoaNV(id);
+
+    hienThiDanhSachNhanVien(dsnv.arr);
+    setLocalStorage();
 }
